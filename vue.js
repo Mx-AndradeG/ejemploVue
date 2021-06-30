@@ -1,11 +1,27 @@
+var data={
+    tareas: [
+        {
+            texto: 'Aprender vue.js',
+            terminada: false
+        },
+        {
+            texto: 'Aprende Angular 2',
+            terminada :false
+        },
+        {
+            texto: 'Aprender Iconic 2',
+            terminada: false
+        }
+    ],
+    nuevaTarea: ''
+}
 Vue.component('titulo',{
     template: '<h2>{{titulo}}</h2>',
     data:function(){
         return{ titulo: '- Lista de tareas -'}
     }
 })
-
-    Vue.component('nueva-tarea',{
+Vue.component('nueva-tarea',{
     template: `
         <div class="input-group">
         <input type="text" 
@@ -21,10 +37,10 @@ Vue.component('titulo',{
         </div>`,
 
         data: function(){
-            return data;
-        },
 
-        methods:{
+            return data; 
+        },
+        methods: {
             agregarTarea: function(){
                 var texto = this.nuevaTarea.trim();
                 if(texto){
@@ -35,33 +51,37 @@ Vue.component('titulo',{
                 }
             }
         }
-    })
+})
+Vue.component('lista-de-tareas',{
+    template: `
+            <ul class="list-group">
+            <li v-for="(tarea, indice) of tareas" class="list-group-item" v-bind:class="{terminada: tarea.terminada}">
+                {{tarea.texto}}
+        <span class="pull-right">
+            <button type="button" class="btn btn-success glyphicon glyphicon-ok"
+                v-on:click =" tarea.terminada = !tarea.terminada"></button>
+            <button type="button" class="btn btn-danger glyphicon glyphicon-remove"
+                v-on:click ="borrar()"></button>   
+        </span>
+        </li>
+        </ul>    
+        `,
+        data: function(){
+
+            return data; 
+        },
+    methods: {
+        borrar: function(indice){
+            this.tareas.splice(indice,1);
+        }
+
+    }
+})
 
 
 
 new Vue({
     el:'#app',
-    data:{
-        titulo : 'Lista de tareas',
-        tareas: [
-            {
-                texto: 'Aprender vue.js',
-                terminada: false
-            },
-            {
-                texto: 'Aprende Angular 2',
-                terminada :false
-            },
-            {
-                texto: 'Aprender Iconic 2',
-                terminada: false
-            }
-        ],
-        nuevaTarea: ''
-    },
-    methods:{
-        borrar: function(indice){
-            this.tareas.splice(indice,1);
-        }
-    }
+    data: data
+    
  })
